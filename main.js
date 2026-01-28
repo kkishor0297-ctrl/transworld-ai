@@ -1,64 +1,40 @@
-const startBtn = document.getElementById('startBtn');
-const translateBtn = document.getElementById('translateBtn');
-const clearBtn = document.getElementById('clearBtn');
-const copyBtn = document.getElementById('copyBtn');
-const shareBtn = document.getElementById('shareBtn');
+const startBtn=document.getElementById("startBtn");
+const stopBtn=document.getElementById("stopBtn");
+const inputText=document.getElementById("inputText");
+const outputText=document.getElementById("outputText");
+const inputLang=document.getElementById("inputLang");
+const outputLang=document.getElementById("outputLang");
 
-const inputText = document.getElementById('inputText');
-const outputText = document.getElementById('outputText');
+const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;
+const recognition=new SpeechRecognition();
 
-const inputSelect = document.getElementById('inputLang');
-const outputSelect = document.getElementById('outputLang');
+recognition.continuous=true;
+recognition.interimResults=false;
 
-// Voice Input
-const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-recognition.continuous = true;
-recognition.interimResults = false;
-
-startBtn.addEventListener('click', ()=>{
-  recognition.lang = inputSelect.value || 'en-US';
+startBtn.onclick=()=>{
+  recognition.lang=inputLang.value;
   recognition.start();
-});
-
-recognition.onresult = (event)=>{
-  const transcript = event.results[event.results.length-1][0].transcript;
-  inputText.value += transcript + ' ';
 };
 
-// Translate & Voice Output
-translateBtn.addEventListener('click', async ()=>{
-  const text = inputText.value.trim();
-  const sourceLang = inputSelect.value;
-  const targetLang = outputSelect.value;
+stopBtn.onclick=()=>{
+  recognition.stop();
+};
 
-  if(!text) return alert('Please enter text!');
+recognition.onresult=(e)=>{
+  const text=e.results[e.results.length-1][0].transcript;
+  inputText.value+=text+" ";
+  speak(text);
+};
 
-  // Dummy translation (replace with real API)
-  const translated = `(${targetLang}) ${text}`;
-  outputText.textContent = translated;
+function speak(text){
+  outputText.textContent=text;
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang=outputLang.value;
+  u.rate=1;
+  u.pitch=1;
+  speechSynthesis.speak(u);
+}
 
-  // Voice output
-  const utter = new SpeechSynthesisUtterance(translated);
-  utter.lang = targetLang || 'en-US';
-  utter.rate = 1; // normal speed
-  utter.pitch = 1; // normal pitch
-  speechSynthesis.speak(utter);
-});
-
-// Clear
-clearBtn.addEventListener('click', ()=>{
-  inputText.value=''; outputText.textContent='';
-});
-
-// Copy
-copyBtn.addEventListener('click', ()=>{
-  navigator.clipboard.writeText(outputText.textContent);
-  alert('Copied!');
-});
-
-// Share
-shareBtn.addEventListener('click', ()=>{
-  if(navigator.share){
-    navigator.share({ text: outputText.textContent }).catch(err=>console.log(err));
-  } else alert('Share not supported.');
+inputText.addEventListener("change",()=>{
+  speak(inputText.value);
 });
