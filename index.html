@@ -1,98 +1,89 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Transworld AI</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Transworld AI – Voice Translator</title>
+
   <link rel="manifest" href="manifest.json">
   <link rel="icon" href="logo.png">
+
   <style>
-    body {
-      font-family: sans-serif;
-      background:#0d1b2a;
-      color:#e0e1dd;
+    body{
       margin:0;
+      font-family: Arial, sans-serif;
+      background:#0b132b;
+      color:#fff;
       display:flex;
       justify-content:center;
       align-items:center;
       min-height:100vh;
     }
-    .container {
-      width:90%;
-      max-width:450px;
-      background:#1b263b;
-      padding:25px;
-      border-radius:20px;
-      text-align:center;
-      box-shadow:0 10px 30px rgba(0,0,0,0.5);
-    }
-    h1 { color:#00f2fe; margin-bottom:10px;}
-    select, textarea {
+    .app{
       width:100%;
-      padding:10px;
-      border-radius:10px;
-      margin-bottom:10px;
-      border:none;
-      background:#0d1b2a;
-      color:#e0e1dd;
+      max-width:420px;
+      background:#1c2541;
+      padding:16px;
+      border-radius:16px;
     }
-    button {
-      margin:5px;
-      padding:10px 15px;
-      border:none;
-      border-radius:10px;
-      background:#00d2ff;
-      color:#fff;
-      cursor:pointer;
+    h1{
+      text-align:center;
+      margin:10px 0;
     }
-    button.voice { background:#ff4b2b; }
-    #outputText {
+    img{
+      display:block;
+      margin:0 auto;
+      width:60px;
+    }
+    select, textarea, button{
+      width:100%;
       margin-top:10px;
       padding:10px;
+      border-radius:10px;
+      border:none;
+      font-size:16px;
+    }
+    textarea{ resize:none; }
+    button{
+      background:#5bc0be;
+      color:#000;
+      font-weight:bold;
+    }
+    button.stop{ background:#ff6b6b; }
+    .output{
+      margin-top:10px;
       background:#fff;
       color:#000;
-      min-height:50px;
+      padding:10px;
       border-radius:10px;
-      word-wrap: break-word;
-    }
-    img.logo {
-      width:60px;
-      height:60px;
-      display:block;
-      margin:0 auto 10px;
+      min-height:60px;
     }
   </style>
 </head>
+
 <body>
-  <div class="container">
-    <img src="logo.png" alt="Transworld AI Logo" class="logo">
-    <h1>Transworld AI</h1>
+<div class="app">
 
-    <!-- Language Selection -->
-    <label for="inputLang">Input Language:</label>
-    <select id="inputLang"></select>
+  <img src="logo.png">
+  <h1>Transworld AI</h1>
 
-    <label for="outputLang">Output Language:</label>
-    <select id="outputLang"></select>
+  <label>Input Language</label>
+  <select id="inputLang"></select>
 
-    <!-- Text Input -->
-    <label for="inputText">Enter / Speak Text:</label>
-    <textarea id="inputText" rows="4" placeholder="Type or speak..."></textarea>
+  <label>Output Language</label>
+  <select id="outputLang"></select>
 
-    <!-- Buttons -->
-    <div>
-      <button id="startBtn" class="voice">🎤 Voice Input</button>
-      <button id="translateBtn">Translate</button>
-      <button id="clearBtn">Clear</button>
-      <button id="copyBtn">Copy</button>
-      <button id="shareBtn">Share</button>
-    </div>
+  <label>Speak or Type</label>
+  <textarea id="inputText" rows="4" placeholder="Bolna shuru karo ya type karo..."></textarea>
 
-    <!-- Output -->
-    <div id="outputText"></div>
-  </div>
+  <button id="startBtn">🎤 Start Listening</button>
+  <button id="stopBtn" class="stop">⏹ Stop</button>
 
-  <script src="languages.js"></script>
-  <script src="main.js"></script>
+  <div class="output" id="outputText"></div>
+
+</div>
+
+<script src="languages.js"></script>
+<script src="main.js"></script>
 </body>
 </html>
