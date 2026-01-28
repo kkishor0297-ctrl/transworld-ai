@@ -7,28 +7,79 @@
   <link rel="manifest" href="manifest.json">
   <link rel="icon" href="logo.png">
   <style>
-    body { font-family: sans-serif; background:#0d1b2a; color:#e0e1dd; margin:0; display:flex; justify-content:center; align-items:center; min-height:100vh;}
-    .container { width:90%; max-width:450px; background:#1b263b; padding:25px; border-radius:20px; text-align:center; box-shadow:0 10px 30px rgba(0,0,0,0.5);}
-    h1 { color:#00f2fe; margin-bottom:15px;}
-    select, textarea { width:100%; padding:10px; border-radius:10px; margin-bottom:10px; border:none; background:#0d1b2a; color:#e0e1dd;}
-    button { margin:5px; padding:10px 15px; border:none; border-radius:10px; background:#00d2ff; color:#fff; cursor:pointer;}
-    button.voice { background:#ff4b2b;}
-    #outputText { margin-top:10px; padding:10px; background:#fff; color:#000; min-height:50px; border-radius:10px;}
+    body {
+      font-family: sans-serif;
+      background:#0d1b2a;
+      color:#e0e1dd;
+      margin:0;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      min-height:100vh;
+    }
+    .container {
+      width:90%;
+      max-width:450px;
+      background:#1b263b;
+      padding:25px;
+      border-radius:20px;
+      text-align:center;
+      box-shadow:0 10px 30px rgba(0,0,0,0.5);
+    }
+    h1 { color:#00f2fe; margin-bottom:10px;}
+    select, textarea {
+      width:100%;
+      padding:10px;
+      border-radius:10px;
+      margin-bottom:10px;
+      border:none;
+      background:#0d1b2a;
+      color:#e0e1dd;
+    }
+    button {
+      margin:5px;
+      padding:10px 15px;
+      border:none;
+      border-radius:10px;
+      background:#00d2ff;
+      color:#fff;
+      cursor:pointer;
+    }
+    button.voice { background:#ff4b2b; }
+    #outputText {
+      margin-top:10px;
+      padding:10px;
+      background:#fff;
+      color:#000;
+      min-height:50px;
+      border-radius:10px;
+      word-wrap: break-word;
+    }
+    img.logo {
+      width:60px;
+      height:60px;
+      display:block;
+      margin:0 auto 10px;
+    }
   </style>
 </head>
 <body>
   <div class="container">
+    <img src="logo.png" alt="Transworld AI Logo" class="logo">
     <h1>Transworld AI</h1>
 
+    <!-- Language Selection -->
     <label for="inputLang">Input Language:</label>
     <select id="inputLang"></select>
 
     <label for="outputLang">Output Language:</label>
     <select id="outputLang"></select>
 
+    <!-- Text Input -->
     <label for="inputText">Enter / Speak Text:</label>
     <textarea id="inputText" rows="4" placeholder="Type or speak..."></textarea>
 
+    <!-- Buttons -->
     <div>
       <button id="startBtn" class="voice">🎤 Voice Input</button>
       <button id="translateBtn">Translate</button>
@@ -37,6 +88,7 @@
       <button id="shareBtn">Share</button>
     </div>
 
+    <!-- Output -->
     <div id="outputText"></div>
   </div>
 
