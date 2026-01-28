@@ -1,31 +1,44 @@
-const languages = [
-    // World top 20 languages
-    { code: 'en', name: 'English' },
-    { code: 'zh', name: 'Chinese' },
-    { code: 'es', name: 'Spanish' },
-    { code: 'ar', name: 'Arabic' },
-    { code: 'hi', name: 'Hindi' },
-    { code: 'fr', name: 'French' },
-    { code: 'ru', name: 'Russian' },
-    { code: 'pt', name: 'Portuguese' },
-    { code: 'ja', name: 'Japanese' },
-    { code: 'de', name: 'German' },
-    { code: 'ko', name: 'Korean' },
-    { code: 'it', name: 'Italian' },
-    { code: 'tr', name: 'Turkish' },
-    { code: 'vi', name: 'Vietnamese' },
-    { code: 'ur', name: 'Urdu' },
-    { code: 'fa', name: 'Persian' },
-    { code: 'bn', name: 'Bengali' },
-    { code: 'pa', name: 'Punjabi' },
-    { code: 'jv', name: 'Javanese' },
-    { code: 'ms', name: 'Malay' },
+const langList = {
+    // 🇮🇳 India Top 6
+    "hi-IN": "Hindi (हिंदी)",
+    "bn-IN": "Bengali (বাংলা)",
+    "mr-IN": "Marathi (मराठी)",
+    "te-IN": "Telugu (తెలుగు)",
+    "ta-IN": "Tamil (தமிழ்)",
+    "gu-IN": "Gujarati (ગુજરાતી)",
+    // 🌍 World Top 20
+    "en-GB": "English (UK)",
+    "es-ES": "Spanish (Español)",
+    "fr-FR": "French (Français)",
+    "ar-SA": "Arabic (العربية)",
+    "zh-CN": "Chinese (Mandarin)",
+    "ru-RU": "Russian (Русский)",
+    "pt-PT": "Portuguese (Português)",
+    "de-DE": "German (Deutsch)",
+    "ja-JP": "Japanese (日本語)",
+    "tr-TR": "Turkish (Türkçe)",
+    "vi-VN": "Vietnamese",
+    "it-IT": "Italiano",
+    "fa-IR": "Persian",
+    "pl-PL": "Polish",
+    "uk-UA": "Ukrainian",
+    "nl-NL": "Dutch",
+    "th-TH": "Thai",
+    "ko-KR": "Korean (한국어)",
+    "id-ID": "Indonesian",
+    "pt-BR": "Portuguese (Brazil)"
+};
 
-    // India top 6 languages (excluding English)
-    { code: 'ta', name: 'Tamil' },
-    { code: 'te', name: 'Telugu' },
-    { code: 'kn', name: 'Kannada' },
-    { code: 'ml', name: 'Malayalam' },
-    { code: 'gu', name: 'Gujarati' },
-    { code: 'mr', name: 'Marathi' }
-];
+const sourceSelect = document.getElementById('sourceLang');
+const targetSelect = document.getElementById('targetLang');
+
+function fillLanguages() {
+    Object.entries(langList).forEach(([code, name]) => {
+        sourceSelect.add(new Option(name, code));
+        targetSelect.add(new Option(name, code));
+    });
+    // डिफ़ॉल्ट भाषा सेट करें
+    sourceSelect.value = "hi-IN"; 
+    targetSelect.value = "en-GB";
+}
+fillLanguages();
