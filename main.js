@@ -1,72 +1,47 @@
 const voiceBtn = document.getElementById('voiceBtn');
-const translateBtn = document.querySelector('.translate-edited-btn'); // आपके UI के हिसाब से
 const inputText = document.getElementById('inputText');
 const outputText = document.getElementById('outputText');
-const sLang = document.getElementById('sourceLang');
-const tLang = document.getElementById('targetLang');
 
-// 🎤 1. आवाज़ से सुनना (Speech to Text)
+// 🎤 आवाज़ सुनना
 const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-recognition.continuous = false;
-
 voiceBtn.onclick = () => {
-    recognition.lang = sLang.value; // चुनी हुई भाषा में सुनना
+    recognition.lang = document.getElementById('sourceLang').value;
     recognition.start();
-    voiceBtn.classList.add('listening');
     voiceBtn.innerText = "Listening... 🎤";
 };
 
 recognition.onresult = (event) => {
-    voiceBtn.classList.remove('listening');
+    const text = event.results[0][0].transcript;
+    inputText.value = text;
+    translate(text);
     voiceBtn.innerText = "Start Voice 🎤";
-    const transcript = event.results[0][0].transcript;
-    inputText.value = transcript;
-    runTranslation(transcript);
 };
 
-// ✍️ 2. एडिट किए हुए टेक्स्ट को ट्रांसलेट करना
-if(translateBtn) {
-    translateBtn.onclick = () => runTranslation(inputText.value);
-}
-
-// 🌍 3. असली अनुवाद और साउंड रिप्लाई
-async function runTranslation(text) {
+// 🌍 इंटरनेट अनुवाद (MyMemory API)
+async function translate(text) {
     if(!text) return;
     outputText.value = "Translating...";
-
-    // API के लिए 2-letter कोड (hi-IN -> hi)
-    const source = sLang.value.split('-')[0];
-    const target = tLang.value.split('-')[0];
-
-    const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${source}|${target}`;
-
+    
+    // 5-letter कोड को 2-letter में बदलना (जैसे hi-IN -> hi) ताकि एरर न आए
+    const s = document.getElementById('sourceLang').value.split('-')[0];
+    const t = document.getElementById('targetLang').value.split('-')[0];
+    
+    const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${s}|${t}`;
+    
     try {
         const response = await fetch(url);
         const data = await response.json();
         const result = data.responseData.translatedText;
-        
         outputText.value = result;
-
-        // 🔊 अनुवाद को बोलकर सुनाना (Sound Reply)
+        
+        // 🔊 आवाज़ में सुनाना
         const speech = new SpeechSynthesisUtterance(result);
-        speech.lang = tLang.value; // सही लहजे में बोलना
+        speech.lang = document.getElementById('targetLang').value;
         window.speechSynthesis.speak(speech);
-
     } catch (err) {
-        outputText.value = "Error: Please check connection.";
+        outputText.value = "Error: Internet check karein!";
     }
 }
 
-// 🧹 Clear Function
-document.getElementById('clearBtn').onclick = () => {
-    inputText.value = "";
-    outputText.value = "";
-};
-window.addEventListener('offline', () => {
-    alert("ध्यान दें: अनुवाद करने के लिए इंटरनेट कनेक्शन ज़रूरी है।");
-});
-
-window.addEventListener('online', () => {
-    console.log("आप ऑनलाइन हैं। अनुवाद शुरू कर सकते हैं।");
-});
-
+// Translate Edited Text Button के लिए
+document.querySelector('.translate-edited-btn').onclick = () => translate(inputText.value);
