@@ -1,99 +1,94 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Transworld AI – Voice Translator</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Transworld AI</title>
 
-  <link rel="manifest" href="manifest.json">
-  <link rel="icon" href="logo.png">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="logo.png">
 
-  <style>
-    body{
-      margin:0;
-      font-family: Arial, sans-serif;
-      background:#0b132b;
-      color:#fff;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      min-height:100vh;
-    }
-    .app{
-      width:100%;
-      max-width:420px;
-      background:#1c2541;
-      padding:16px;
-      border-radius:16px;
-    }
-    h1{
-      text-align:center;
-      margin:10px 0;
-    }
-    img{
-      display:block;
-      margin:0 auto;
-      width:60px;
-    }
-    select, textarea, button{
-      width:100%;
-      margin-top:10px;
-      padding:10px;
-      border-radius:10px;
-      border:none;
-      font-size:16px;
-    }
-    textarea{ resize:none; }
-    button{
-      background:#5bc0be;
-      color:#000;
-      font-weight:bold;
-    }
-    button.stop{ background:#ff6b6b; }
-    .output{
-      margin-top:10px;
-      background:#fff;
-      color:#000;
-      padding:10px;
-      border-radius:10px;
-      min-height:60px;
-    }
-  </style>
+<style>
+body{
+  margin:0;
+  background:#0b132b;
+  font-family:Arial;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:100vh;
+  color:#fff;
+}
+.app{
+  width:100%;
+  max-width:420px;
+  background:#1c2541;
+  padding:16px;
+  border-radius:16px;
+}
+.logo{
+  width:90px;
+  display:block;
+  margin:0 auto 10px;
+}
+h1{text-align:center;margin:5px 0;}
+select,textarea,button{
+  width:100%;
+  padding:10px;
+  margin-top:8px;
+  border-radius:10px;
+  border:none;
+  font-size:16px;
+}
+textarea{resize:none;}
+button{font-weight:bold;}
+.listen{background:#5bc0be;}
+.listen.active{background:#2ecc71;color:#000;}
+.stop{background:#ff6b6b;}
+.copy{background:#feca57;}
+.clear{background:#8395a7;}
+.output{
+  background:#fff;
+  color:#000;
+  margin-top:10px;
+  padding:10px;
+  border-radius:10px;
+  min-height:60px;
+}
+</style>
 </head>
 
 <body>
 <div class="app">
 
-  <img src="logo.png">
-  <h1>Transworld AI</h1>
+<img src="logo.png" class="logo">
+<h1>Transworld AI</h1>
 
-  <label>Input Language</label>
-  <select id="inputLang"></select>
+<label>Input Language</label>
+<select id="inputLang"></select>
 
-  <label>Output Language</label>
-  <select id="outputLang"></select>
+<label>Output Language</label>
+<select id="outputLang"></select>
 
-  <label>Speak or Type</label>
-  <textarea id="inputText" rows="4" placeholder="Bolna shuru karo ya type karo..."></textarea>
+<textarea id="inputText" rows="4" placeholder="Speak or type here..."></textarea>
 
-  <button id="startBtn">🎤 Start Listening</button>
-  <button id="stopBtn" class="stop">⏹ Stop</button>
+<button id="startBtn" class="listen">🎤 Start Listening</button>
+<button id="stopBtn" class="stop">⏹ Stop Listening</button>
 
-  <div class="output" id="outputText"></div>
+<button id="copyBtn" class="copy">📋 Copy Text</button>
+<button id="clearBtn" class="clear">🧹 Clear</button>
+
+<div id="outputText" class="output"></div>
 
 </div>
 
 <script src="languages.js"></script>
 <script src="main.js"></script>
-  <script>
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker
-      .register("./sw.js")
-      .then(() => console.log("Service Worker Registered"))
-      .catch(err => console.log("SW Error", err));
-  });
+
+<script>
+if("serviceWorker"in navigator){
+ navigator.serviceWorker.register("./sw.js");
 }
-  </script>
+</script>
 </body>
 </html>
