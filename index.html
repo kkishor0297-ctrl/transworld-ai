@@ -1,66 +1,43 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Transworld AI - By Kamal Kishor</title>
-    <link rel="manifest" href="manifest.json">
-    <link rel="icon" href="logo.png">
-    <style>
-        :root {
-            --bg-color: #0d1b2a;
-            --card-bg: #1b263b;
-            --text-color: #e0e1dd;
-            --accent-color: #00f2fe;
-            --btn-blue: #00d2ff;
-            --btn-listening: #ff4b2b;
-        }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-        .container {
-            width: 90%;
-            max-width: 450px;
-            background: var(--card-bg);
-            padding: 25px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            text-align: center;
-        }
-        .logo-section img {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            border: 2px solid var(--accent-color);
-            margin-bottom: 10px;
-        }
-        h1 { color: var(--accent-color); font-size: 24px; margin-bottom: 20px; }
-        label { display: block; text-align: left; margin: 10px 0 5px; font-size: 14px; }
-        select, textarea { width: 100%; padding: 10px; border-radius: 10px; border: 1px solid var(--accent-color); background: var(--bg-color); color: var(--text-color); }
-        button { margin-top: 15px; padding: 10px 15px; border: none; border-radius: 10px; background-color: var(--btn-blue); color: #fff; cursor: pointer; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Transworld AI</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="logo.png">
+  <style>
+    body { font-family: sans-serif; background:#0d1b2a; color:#e0e1dd; margin:0; display:flex; justify-content:center; align-items:center; min-height:100vh;}
+    .container { width:90%; max-width:450px; background:#1b263b; padding:25px; border-radius:20px; text-align:center; box-shadow:0 10px 30px rgba(0,0,0,0.5);}
+    h1 { color:#00f2fe; margin-bottom:15px;}
+    select, textarea { width:100%; padding:10px; border-radius:10px; margin-bottom:10px; border:none; background:#0d1b2a; color:#e0e1dd;}
+    button { margin:5px; padding:10px 15px; border:none; border-radius:10px; background:#00d2ff; color:#fff; cursor:pointer;}
+    button.voice { background:#ff4b2b;}
+    #outputText { margin-top:10px; padding:10px; background:#fff; color:#000; min-height:50px; border-radius:10px;}
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="logo-section">
-            <img src="logo.png" alt="Transworld AI Logo">
-        </div>
-        <h1>Transworld AI</h1>
-        <label for="language">Select Language:</label>
-        <select id="language"></select>
-        <label for="inputText">Enter Text:</label>
-        <textarea id="inputText" rows="4"></textarea>
-        <button id="translateBtn">Translate</button>
-        <p id="outputText"></p>
+  <div class="container">
+    <h1>Transworld AI</h1>
+
+    <label for="language">Select Language:</label>
+    <select id="language"></select>
+
+    <label for="inputText">Enter / Speak Text:</label>
+    <textarea id="inputText" rows="4" placeholder="Type or speak..."></textarea>
+
+    <div>
+      <button id="startBtn" class="voice">🎤 Voice Input</button>
+      <button id="translateBtn">Translate</button>
+      <button id="clearBtn">Clear</button>
+      <button id="copyBtn">Copy</button>
+      <button id="shareBtn">Share</button>
     </div>
-    <script src="languages.js"></script>
-    <script src="main.js"></script>
+
+    <div id="outputText"></div>
+  </div>
+
+  <script src="languages.js"></script>
+  <script src="main.js"></script>
 </body>
 </html>
