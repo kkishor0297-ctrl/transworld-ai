@@ -27,7 +27,7 @@ const languages = [
   { code: 'ta', name: 'Tamil' }
 ];
 
-// Populate dropdowns
+// Populate input and output dropdowns
 const inputLang = document.getElementById('inputLang');
 const outputLang = document.getElementById('outputLang');
 
