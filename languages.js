@@ -1,24 +1,31 @@
 const languages = [
-  // World Top 20
-  "English", "Spanish", "Chinese", "French", "Arabic",
-  "Russian", "Portuguese", "Japanese", "German", "Korean",
-  "Italian", "Turkish", "Dutch", "Polish", "Swedish",
-  "Norwegian", "Thai", "Vietnamese", "Indonesian", "Greek",
-  // India Top 6
-  "Hindi", "Bengali", "Telugu", "Marathi", "Tamil", "Gujarati"
+    // World top 20 languages
+    { code: 'en', name: 'English' },
+    { code: 'zh', name: 'Chinese' },
+    { code: 'es', name: 'Spanish' },
+    { code: 'ar', name: 'Arabic' },
+    { code: 'hi', name: 'Hindi' },
+    { code: 'fr', name: 'French' },
+    { code: 'ru', name: 'Russian' },
+    { code: 'pt', name: 'Portuguese' },
+    { code: 'ja', name: 'Japanese' },
+    { code: 'de', name: 'German' },
+    { code: 'ko', name: 'Korean' },
+    { code: 'it', name: 'Italian' },
+    { code: 'tr', name: 'Turkish' },
+    { code: 'vi', name: 'Vietnamese' },
+    { code: 'ur', name: 'Urdu' },
+    { code: 'fa', name: 'Persian' },
+    { code: 'bn', name: 'Bengali' },
+    { code: 'pa', name: 'Punjabi' },
+    { code: 'jv', name: 'Javanese' },
+    { code: 'ms', name: 'Malay' },
+
+    // India top 6 languages (excluding English)
+    { code: 'ta', name: 'Tamil' },
+    { code: 'te', name: 'Telugu' },
+    { code: 'kn', name: 'Kannada' },
+    { code: 'ml', name: 'Malayalam' },
+    { code: 'gu', name: 'Gujarati' },
+    { code: 'mr', name: 'Marathi' }
 ];
-
-const inputLangSelect = document.getElementById('inputLang');
-const outputLangSelect = document.getElementById('outputLang');
-
-languages.forEach(lang => {
-  const option1 = document.createElement('option');
-  option1.value = lang;
-  option1.text = lang;
-  inputLangSelect.appendChild(option1);
-
-  const option2 = document.createElement('option');
-  option2.value = lang;
-  option2.text = lang;
-  outputLangSelect.appendChild(option2);
-});
