@@ -1,39 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Transworld AI</title>
-
-<link rel="manifest" href="manifest.json">
-<link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <title>TransWorld AI Advanced</title>
+    <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<div class="app">
+<h2>TransWorld AI - Advanced</h2>
 
-  <h1>🌍 Transworld AI</h1>
-  <p>Voice & Text Language Translator</p>
+<textarea id="inputText" placeholder="Type or speak your text here"></textarea>
+<br><br>
 
-  <label>Speak / Type Language</label>
-  <select id="inputLang"></select>
+<button id="micBtn">🎤 Speak</button>
+<br><br>
 
-  <label>Translate To</label>
-  <select id="outputLang"></select>
+<select id="languageDropdown">
+    <option value="">Select language</option>
+</select>
+<br><br>
 
-  <textarea id="inputText" placeholder="Type here or use mic..."></textarea>
+<button id="translateBtn">Translate</button>
+<br><br>
 
-  <textarea id="outputText" placeholder="Translation will appear here..." readonly></textarea>
+<textarea id="outputText" placeholder="Translation will appear here"></textarea>
+<br><br>
 
-  <div class="buttons">
-    <button id="listenBtn" class="green">🎤 Listen & Translate</button>
-    <button id="translateBtn" class="blue">🔁 Translate Text</button>
-    <button id="copyBtn" class="yellow">📋 Copy</button>
-    <button id="clearBtn" class="gray">🧹 Clear</button>
-    <button id="shareBtn" class="purple">🔗 Share</button>
-  </div>
-</body>
-  <script src="languages.js"></script>
+<button id="speakBtn">🔊 Speak Output</button>
+
+<script src="languages.js"></script>
 <script src="app.js"></script>
+</body>
 </html>
