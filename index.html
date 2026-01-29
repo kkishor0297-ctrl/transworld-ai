@@ -1,33 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Transworld AI</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <title>Transworld AI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-<div class="app-container">
-  <img src="logo.png" alt="Transworld AI Logo" class="logo">
-  <h1>Transworld AI</h1>
+<div class="app">
 
-  <label for="inputLang">Input Language:</label>
+  <h1>🌍 Transworld AI</h1>
+  <p class="tagline">Voice & Text Language Translator</p>
+
+  <label>Speak / Type Language</label>
   <select id="inputLang"></select>
 
-  <label for="outputLang">Output Language:</label>
+  <label>Translate To</label>
   <select id="outputLang"></select>
 
-  <textarea id="inputText" placeholder="Type or speak..."></textarea>
-  <textarea id="outputText" placeholder="Translation appears here..." readonly></textarea>
+  <textarea id="inputText" placeholder="Type here or use mic..."></textarea>
 
-  <button id="listenBtn">🎤 Listen & Translate</button>
-  <button id="copyBtn">📋 Copy</button>
-  <button id="clearBtn">🧹 Clear</button>
-  <button id="shareBtn">🔗 Share</button>
+  <textarea id="outputText" placeholder="Translated text..." readonly></textarea>
+
+  <button id="micBtn">🎤 Listen & Translate</button>
+  <button id="translateBtn">🔁 Translate Text</button>
+
+  <div class="row">
+    <button id="copyBtn">📋 Copy</button>
+    <button id="clearBtn">🧹 Clear</button>
+    <button id="shareBtn">🔗 Share</button>
+  </div>
+
 </div>
 
 <script src="languages.js"></script>
-<!-- main.js छोड़ना है जैसा कहा आपने -->
+<script src="app.js"></script>
+
 </body>
 </html>
