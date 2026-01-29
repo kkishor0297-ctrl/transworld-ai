@@ -1,71 +1,34 @@
 body {
+  background-color: #0a192f;
+  color: white;
   font-family: Arial, sans-serif;
-  background: #0f1b2b;
-  color: #fff;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
+  justify-content: flex-start;
   min-height: 100vh;
-  margin: 0;
-}
-
-.container {
-  background: #14293d;
   padding: 20px;
-  border-radius: 15px;
-  width: 90%;
-  max-width: 400px;
-  text-align: center;
-  box-shadow: 0 0 20px rgba(0,0,0,0.5);
-}
-
-.logo {
-  width: 80px;
-  margin-bottom: 10px;
-}
-
-h1 {
-  margin: 10px 0;
-  color: #38c6a5;
-}
-
-label {
-  display: block;
-  text-align: left;
-  margin-top: 10px;
-  font-weight: bold;
-}
-
-select, textarea {
-  width: 100%;
-  padding: 10px;
-  margin: 5px 0 10px 0;
-  border-radius: 8px;
-  border: none;
-  font-size: 14px;
+  box-sizing: border-box;
 }
 
 textarea {
-  resize: none;
-  min-height: 60px;
-}
-
-.buttons button {
-  margin: 5px 5px 5px 0;
+  width: 90%;
+  max-width: 400px;
+  height: 80px;
+  margin: 10px 0;
   padding: 10px;
-  border: none;
-  border-radius: 8px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: 0.2s;
+  font-size: 16px;
 }
 
-.green { background: #38c6a5; color: #fff; }
-.blue { background: #2196F3; color: #fff; }
-.yellow { background: #FFD700; color: #000; }
-.gray { background: #666; color: #fff; }
-.purple { background: #9C27B0; color: #fff; }
+select, button {
+  margin: 5px 0;
+  padding: 10px;
+  font-size: 16px;
+  width: 90%;
+  max-width: 400px;
+}
 
-button:hover {
-  opacity: 0.85;
+#speakBtn, #micBtn {
+  width: 45%;
+  margin: 5px 2%;
 }
