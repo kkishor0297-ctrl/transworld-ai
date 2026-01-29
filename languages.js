@@ -1,6 +1,13 @@
 const languages = [
-  { code: "en", name: "English" },
+  // India 6 languages
   { code: "hi", name: "Hindi" },
+  { code: "en", name: "English" },
+  { code: "bn", name: "Bengali" },
+  { code: "ta", name: "Tamil" },
+  { code: "te", name: "Telugu" },
+  { code: "mr", name: "Marathi" },
+
+  // World 30+ languages
   { code: "es", name: "Spanish" },
   { code: "fr", name: "French" },
   { code: "de", name: "German" },
@@ -11,13 +18,9 @@ const languages = [
   { code: "ar", name: "Arabic" },
   { code: "ru", name: "Russian" },
   { code: "pt", name: "Portuguese" },
-  { code: "bn", name: "Bengali" },
   { code: "pa", name: "Punjabi" },
   { code: "gu", name: "Gujarati" },
-  { code: "ta", name: "Tamil" },
-  { code: "te", name: "Telugu" },
   { code: "ml", name: "Malayalam" },
-  { code: "mr", name: "Marathi" },
   { code: "ur", name: "Urdu" },
   { code: "tr", name: "Turkish" },
   { code: "nl", name: "Dutch" },
@@ -28,5 +31,11 @@ const languages = [
   { code: "pl", name: "Polish" },
   { code: "cs", name: "Czech" },
   { code: "el", name: "Greek" },
-  { code: "he", name: "Hebrew" }
+  { code: "he", name: "Hebrew" },
+  { code: "vi", name: "Vietnamese" },
+  { code: "th", name: "Thai" },
+  { code: "id", name: "Indonesian" },
+  { code: "ms", name: "Malay" },
+  { code: "ro", name: "Romanian" },
+  { code: "hu", name: "Hungarian" }
 ];
