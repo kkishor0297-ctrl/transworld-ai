@@ -1,321 +1,103 @@
-/* =========================================================
-   Transworld AI - Voice & Text Translator
-   - Speech Recognition (mic input)
-   - MyMemory API (translation)
-   - Speech Synthesis (voice output)
-   ========================================================= */
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <meta name="theme-color" content="#4F46E5" />
+  <meta name="description" content="Transworld AI - Voice & Text Translator for Travelers and Interview Speakers" />
 
-(function () {
-  "use strict";
+  <title>Transworld AI - Voice Translator</title>
 
-  // ---------- DOM Elements ----------
-  const sourceLangEl   = document.getElementById("sourceLang");
-  const targetLangEl   = document.getElementById("targetLang");
-  const swapBtn        = document.getElementById("swapBtn");
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" type="image/png" href="logo.png" />
+  <link rel="apple-touch-icon" href="logo.png" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
 
-  const inputTextEl    = document.getElementById("inputText");
-  const outputTextEl   = document.getElementById("outputText");
+  <div class="app">
 
-  const inputLangLabel  = document.getElementById("inputLangLabel");
-  const outputLangLabel = document.getElementById("outputLangLabel");
+    <!-- Header -->
+    <header class="header">
+      <img src="logo.png" alt="Transworld AI Logo" class="logo" />
+      <div class="header-text">
+        <h1>Transworld AI</h1>
+        <p>Voice &amp; Text Translator</p>
+      </div>
+    </header>
 
-  const micBtn        = document.getElementById("micBtn");
-  const micStatus     = document.getElementById("micStatus");
+    <!-- Main Card -->
+    <main class="main">
 
-  const translateBtn  = document.getElementById("translateBtn");
-  const clearBtn      = document.getElementById("clearBtn");
-  const copyBtn       = document.getElementById("copyBtn");
+      <!-- Language Selectors -->
+      <div class="lang-row">
+        <div class="lang-box">
+          <label for="sourceLang">Speak in</label>
+          <select id="sourceLang"></select>
+        </div>
 
-  const speakInputBtn  = document.getElementById("speakInputBtn");
-  const speakOutputBtn = document.getElementById("speakOutputBtn");
+        <button id="swapBtn" class="swap-btn" title="Swap languages" aria-label="Swap languages">
+          ⇄
+        </button>
 
-  const statusMsg = document.getElementById("statusMsg");
+        <div class="lang-box">
+          <label for="targetLang">Translate to</label>
+          <select id="targetLang"></select>
+        </div>
+      </div>
 
-  // ---------- State ----------
-  let isRecording = false;
-  let recognition = null;
+      <!-- Input Text Area -->
+      <div class="text-card">
+        <div class="text-card-header">
+          <span>Original</span>
+          <button id="clearBtn" class="icon-btn" title="Clear">✕</button>
+        </div>
+        <textarea id="inputText" placeholder="Tap the mic and speak, or type here..." rows="4"></textarea>
+        <div class="text-card-footer">
+          <button id="speakInputBtn" class="icon-btn" title="Listen to original">🔊</button>
+          <span id="inputLangLabel" class="lang-label"></span>
+        </div>
+      </div>
 
-  // ---------- Populate language dropdowns ----------
-  function populateLanguages() {
-    UNIQUE_LANGUAGES.forEach((lang) => {
-      const opt1 = document.createElement("option");
-      opt1.value = lang.translateCode;
-      opt1.textContent = lang.name;
-      opt1.dataset.speechCode = lang.code;
-      sourceLangEl.appendChild(opt1);
+      <!-- Mic Button -->
+      <div class="mic-wrapper">
+        <button id="micBtn" class="mic-btn" title="Tap to speak" aria-label="Record voice">
+          <svg id="micIcon" viewBox="0 0 24 24" width="36" height="36" fill="currentColor">
+            <path d="M12 14a3 3 0 0 0 3-3V5a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3z"/>
+            <path d="M19 11a1 1 0 0 0-2 0 5 5 0 0 1-10 0 1 1 0 0 0-2 0 7 7 0 0 0 6 6.92V20H9a1 1 0 0 0 0 2h6a1 1 0 0 0 0-2h-2v-2.08A7 7 0 0 0 19 11z"/>
+          </svg>
+        </button>
+        <p id="micStatus" class="mic-status">Tap to speak</p>
+      </div>
 
-      const opt2 = document.createElement("option");
-      opt2.value = lang.translateCode;
-      opt2.textContent = lang.name;
-      opt2.dataset.speechCode = lang.code;
-      targetLangEl.appendChild(opt2);
-    });
+      <!-- Translate Button (for typed text) -->
+      <button id="translateBtn" class="translate-btn">Translate</button>
 
-    // Defaults: source = Hindi, target = English (common for Kamal's use case)
-    setSelectByValue(sourceLangEl, "hi");
-    setSelectByValue(targetLangEl, "en");
+      <!-- Output Text Area -->
+      <div class="text-card output-card">
+        <div class="text-card-header">
+          <span>Translation</span>
+          <button id="copyBtn" class="icon-btn" title="Copy">⧉</button>
+        </div>
+        <textarea id="outputText" placeholder="Translation will appear here..." rows="4" readonly></textarea>
+        <div class="text-card-footer">
+          <button id="speakOutputBtn" class="icon-btn" title="Listen to translation">🔊</button>
+          <span id="outputLangLabel" class="lang-label"></span>
+        </div>
+      </div>
 
-    updateLangLabels();
-  }
+      <!-- Status / Error message -->
+      <p id="statusMsg" class="status-msg"></p>
 
-  function setSelectByValue(selectEl, value) {
-    const idx = Array.from(selectEl.options).findIndex((o) => o.value === value);
-    if (idx >= 0) selectEl.selectedIndex = idx;
-  }
+    </main>
 
-  function getSpeechCode(selectEl) {
-    return selectEl.options[selectEl.selectedIndex].dataset.speechCode;
-  }
+    <footer class="footer">
+      <p>Made with ❤️ on mobile &amp; laptop &mdash; Transworld AI</p>
+    </footer>
 
-  function getLangName(selectEl) {
-    return selectEl.options[selectEl.selectedIndex].textContent;
-  }
+  </div>
 
-  function updateLangLabels() {
-    inputLangLabel.textContent = getLangName(sourceLangEl);
-    outputLangLabel.textContent = getLangName(targetLangEl);
-  }
-
-  sourceLangEl.addEventListener("change", updateLangLabels);
-  targetLangEl.addEventListener("change", updateLangLabels);
-
-  // ---------- Swap languages ----------
-  swapBtn.addEventListener("click", () => {
-    const srcIdx = sourceLangEl.selectedIndex;
-    const tgtIdx = targetLangEl.selectedIndex;
-    sourceLangEl.selectedIndex = tgtIdx;
-    targetLangEl.selectedIndex = srcIdx;
-    updateLangLabels();
-
-    // Also swap text content
-    const tmp = inputTextEl.value;
-    inputTextEl.value = outputTextEl.value;
-    outputTextEl.value = tmp;
-  });
-
-  // ---------- Status helper ----------
-  function setStatus(msg, type) {
-    statusMsg.textContent = msg || "";
-    statusMsg.className = "status-msg" + (type ? " " + type : "");
-  }
-
-  // ---------- Speech Recognition (Mic Input) ----------
-  function getRecognitionClass() {
-    return window.SpeechRecognition || window.webkitSpeechRecognition || null;
-  }
-
-  function startRecording() {
-    const RecognitionClass = getRecognitionClass();
-
-    if (!RecognitionClass) {
-      setStatus("Voice input is not supported in this browser. Please use Google Chrome.", "error");
-      return;
-    }
-
-    recognition = new RecognitionClass();
-    recognition.lang = getSpeechCode(sourceLangEl);
-    recognition.interimResults = true;
-    recognition.continuous = false;
-    recognition.maxAlternatives = 1;
-
-    isRecording = true;
-    micBtn.classList.add("recording");
-    micStatus.textContent = "Listening... speak now";
-    setStatus("");
-
-    let finalTranscript = "";
-
-    recognition.onresult = (event) => {
-      let interim = "";
-      for (let i = event.resultIndex; i < event.results.length; i++) {
-        const transcript = event.results[i][0].transcript;
-        if (event.results[i].isFinal) {
-          finalTranscript += transcript;
-        } else {
-          interim += transcript;
-        }
-      }
-      inputTextEl.value = (finalTranscript + " " + interim).trim();
-    };
-
-    recognition.onerror = (event) => {
-      isRecording = false;
-      micBtn.classList.remove("recording");
-      micStatus.textContent = "Tap to speak";
-
-      let msg = "Voice input error: " + event.error;
-      if (event.error === "no-speech") msg = "No speech detected. Try again.";
-      if (event.error === "not-allowed" || event.error === "service-not-allowed") {
-        msg = "Microphone permission denied. Please allow mic access.";
-      }
-      setStatus(msg, "error");
-    };
-
-    recognition.onend = () => {
-      isRecording = false;
-      micBtn.classList.remove("recording");
-      micStatus.textContent = "Tap to speak";
-
-      // Auto-translate once speech ends, if we have text
-      if (inputTextEl.value.trim().length > 0) {
-        translateText();
-      }
-    };
-
-    recognition.start();
-  }
-
-  function stopRecording() {
-    if (recognition) {
-      recognition.stop();
-    }
-    isRecording = false;
-    micBtn.classList.remove("recording");
-    micStatus.textContent = "Tap to speak";
-  }
-
-  micBtn.addEventListener("click", () => {
-    if (isRecording) {
-      stopRecording();
-    } else {
-      startRecording();
-    }
-  });
-
-  // ---------- Translation via MyMemory API ----------
-  async function translateText() {
-    const text = inputTextEl.value.trim();
-    if (!text) {
-      setStatus("Please speak or type something first.", "error");
-      return;
-    }
-
-    const sourceLang = sourceLangEl.value;
-    const targetLang = targetLangEl.value;
-
-    if (sourceLang === targetLang) {
-      outputTextEl.value = text;
-      setStatus("Source and target languages are the same.", "");
-      return;
-    }
-
-    translateBtn.disabled = true;
-    translateBtn.textContent = "Translating...";
-    setStatus("Translating, please wait...", "");
-
-    try {
-      const langPair = `${sourceLang}|${targetLang}`;
-      const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${langPair}`;
-
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error("Network error: " + response.status);
-      }
-
-      const data = await response.json();
-
-      if (data && data.responseData && data.responseData.translatedText) {
-        outputTextEl.value = data.responseData.translatedText;
-        setStatus("Translation complete.", "success");
-
-        // Auto speak the translated output
-        speakText(outputTextEl.value, getSpeechCode(targetLangEl));
-      } else {
-        throw new Error("Translation failed. Try again.");
-      }
-    } catch (err) {
-      console.error(err);
-      setStatus("Translation failed. Check your internet connection and try again.", "error");
-    } finally {
-      translateBtn.disabled = false;
-      translateBtn.textContent = "Translate";
-    }
-  }
-
-  translateBtn.addEventListener("click", translateText);
-
-  // Allow pressing Enter in the textarea to translate (Shift+Enter for newline)
-  inputTextEl.addEventListener("keydown", (e) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      translateText();
-    }
-  });
-
-  // ---------- Speech Synthesis (Voice Output) ----------
-  function speakText(text, langCode) {
-    if (!text || !text.trim()) return;
-
-    if (!("speechSynthesis" in window)) {
-      setStatus("Voice output is not supported in this browser.", "error");
-      return;
-    }
-
-    // Cancel any ongoing speech
-    window.speechSynthesis.cancel();
-
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = langCode;
-    utterance.rate = 0.95;
-    utterance.pitch = 1;
-
-    // Try to pick a matching voice
-    const voices = window.speechSynthesis.getVoices();
-    const matchingVoice = voices.find((v) => v.lang === langCode) ||
-                           voices.find((v) => v.lang.startsWith(langCode.split("-")[0]));
-    if (matchingVoice) utterance.voice = matchingVoice;
-
-    window.speechSynthesis.speak(utterance);
-  }
-
-  speakInputBtn.addEventListener("click", () => {
-    speakText(inputTextEl.value, getSpeechCode(sourceLangEl));
-  });
-
-  speakOutputBtn.addEventListener("click", () => {
-    speakText(outputTextEl.value, getSpeechCode(targetLangEl));
-  });
-
-  // Pre-load voices (some browsers load them asynchronously)
-  if ("speechSynthesis" in window) {
-    window.speechSynthesis.onvoiceschanged = () => {
-      window.speechSynthesis.getVoices();
-    };
-  }
-
-  // ---------- Clear & Copy ----------
-  clearBtn.addEventListener("click", () => {
-    inputTextEl.value = "";
-    outputTextEl.value = "";
-    setStatus("");
-    inputTextEl.focus();
-  });
-
-  copyBtn.addEventListener("click", () => {
-    const text = outputTextEl.value;
-    if (!text) {
-      setStatus("Nothing to copy yet.", "error");
-      return;
-    }
-    navigator.clipboard.writeText(text).then(() => {
-      setStatus("Copied to clipboard!", "success");
-    }).catch(() => {
-      // Fallback for older browsers
-      outputTextEl.select();
-      document.execCommand("copy");
-      setStatus("Copied to clipboard!", "success");
-    });
-  });
-
-  // ---------- Service Worker Registration (PWA) ----------
-  if ("serviceWorker" in navigator) {
-    window.addEventListener("load", () => {
-      navigator.serviceWorker.register("sw.js").catch((err) => {
-        console.warn("Service worker registration failed:", err);
-      });
-    });
-  }
-
-  // ---------- Init ----------
-  populateLanguages();
-})();
+  <script src="languages.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
