@@ -8,7 +8,6 @@
 (function () {
   "use strict";
 
-  // ---------- DOM Elements ----------
   const sourceLangEl   = document.getElementById("sourceLang");
   const targetLangEl   = document.getElementById("targetLang");
   const swapBtn        = document.getElementById("swapBtn");
@@ -31,11 +30,9 @@
 
   const statusMsg = document.getElementById("statusMsg");
 
-  // ---------- State ----------
   let isRecording = false;
   let recognition = null;
 
-  // ---------- Populate language dropdowns ----------
   function populateLanguages() {
     UNIQUE_LANGUAGES.forEach((lang) => {
       const opt1 = document.createElement("option");
@@ -51,7 +48,6 @@
       targetLangEl.appendChild(opt2);
     });
 
-    // Defaults: source = Hindi, target = English (common for Kamal's use case)
     setSelectByValue(sourceLangEl, "hi");
     setSelectByValue(targetLangEl, "en");
 
@@ -79,7 +75,6 @@
   sourceLangEl.addEventListener("change", updateLangLabels);
   targetLangEl.addEventListener("change", updateLangLabels);
 
-  // ---------- Swap languages ----------
   swapBtn.addEventListener("click", () => {
     const srcIdx = sourceLangEl.selectedIndex;
     const tgtIdx = targetLangEl.selectedIndex;
@@ -87,19 +82,16 @@
     targetLangEl.selectedIndex = srcIdx;
     updateLangLabels();
 
-    // Also swap text content
     const tmp = inputTextEl.value;
     inputTextEl.value = outputTextEl.value;
     outputTextEl.value = tmp;
   });
 
-  // ---------- Status helper ----------
   function setStatus(msg, type) {
     statusMsg.textContent = msg || "";
     statusMsg.className = "status-msg" + (type ? " " + type : "");
   }
 
-  // ---------- Speech Recognition (Mic Input) ----------
   function getRecognitionClass() {
     return window.SpeechRecognition || window.webkitSpeechRecognition || null;
   }
@@ -156,7 +148,6 @@
       micBtn.classList.remove("recording");
       micStatus.textContent = "Tap to speak";
 
-      // Auto-translate once speech ends, if we have text
       if (inputTextEl.value.trim().length > 0) {
         translateText();
       }
@@ -182,7 +173,6 @@
     }
   });
 
-  // ---------- Translation via MyMemory API ----------
   async function translateText() {
     const text = inputTextEl.value.trim();
     if (!text) {
@@ -218,7 +208,6 @@
         outputTextEl.value = data.responseData.translatedText;
         setStatus("Translation complete.", "success");
 
-        // Auto speak the translated output
         speakText(outputTextEl.value, getSpeechCode(targetLangEl));
       } else {
         throw new Error("Translation failed. Try again.");
@@ -234,7 +223,6 @@
 
   translateBtn.addEventListener("click", translateText);
 
-  // Allow pressing Enter in the textarea to translate (Shift+Enter for newline)
   inputTextEl.addEventListener("keydown", (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
@@ -242,7 +230,6 @@
     }
   });
 
-  // ---------- Speech Synthesis (Voice Output) ----------
   function speakText(text, langCode) {
     if (!text || !text.trim()) return;
 
@@ -251,7 +238,6 @@
       return;
     }
 
-    // Cancel any ongoing speech
     window.speechSynthesis.cancel();
 
     const utterance = new SpeechSynthesisUtterance(text);
@@ -259,7 +245,6 @@
     utterance.rate = 0.95;
     utterance.pitch = 1;
 
-    // Try to pick a matching voice
     const voices = window.speechSynthesis.getVoices();
     const matchingVoice = voices.find((v) => v.lang === langCode) ||
                            voices.find((v) => v.lang.startsWith(langCode.split("-")[0]));
@@ -276,14 +261,12 @@
     speakText(outputTextEl.value, getSpeechCode(targetLangEl));
   });
 
-  // Pre-load voices (some browsers load them asynchronously)
   if ("speechSynthesis" in window) {
     window.speechSynthesis.onvoiceschanged = () => {
       window.speechSynthesis.getVoices();
     };
   }
 
-  // ---------- Clear & Copy ----------
   clearBtn.addEventListener("click", () => {
     inputTextEl.value = "";
     outputTextEl.value = "";
@@ -300,14 +283,12 @@
     navigator.clipboard.writeText(text).then(() => {
       setStatus("Copied to clipboard!", "success");
     }).catch(() => {
-      // Fallback for older browsers
       outputTextEl.select();
       document.execCommand("copy");
       setStatus("Copied to clipboard!", "success");
     });
   });
 
-  // ---------- Service Worker Registration (PWA) ----------
   if ("serviceWorker" in navigator) {
     window.addEventListener("load", () => {
       navigator.serviceWorker.register("sw.js").catch((err) => {
@@ -316,6 +297,5 @@
     });
   }
 
-  // ---------- Init ----------
   populateLanguages();
 })();
