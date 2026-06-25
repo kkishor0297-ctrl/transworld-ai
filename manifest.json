@@ -1,8 +1,19 @@
 {
-  "name":"Transworld AI",
-  "short_name":"Transworld",
-  "start_url":"./",
-  "display":"standalone",
-  "background_color":"#0b132b",
-  "theme_color":"#5bc0be"
+  "name": "Transworld AI - Voice Translator",
+  "short_name": "Transworld AI",
+  "description": "Voice and text translator for travelers and interview speakers. Supports top 20 world languages.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#4F46E5",
+  "theme_color": "#4F46E5",
+  "icons": [
+    {
+      "src": "logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
 }
