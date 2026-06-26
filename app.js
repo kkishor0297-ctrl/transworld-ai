@@ -1,301 +1,520 @@
-/* =========================================================
-   Transworld AI - Voice & Text Translator
-   - Speech Recognition (mic input)
-   - MyMemory API (translation)
-   - Speech Synthesis (voice output)
-   ========================================================= */
+/* ==========================================================
+   Transworld AI
+   Part 8
+========================================================== */
 
 (function () {
-  "use strict";
 
-  const sourceLangEl   = document.getElementById("sourceLang");
-  const targetLangEl   = document.getElementById("targetLang");
-  const swapBtn        = document.getElementById("swapBtn");
+"use strict";
 
-  const inputTextEl    = document.getElementById("inputText");
-  const outputTextEl   = document.getElementById("outputText");
+const sourceLangEl=document.getElementById("sourceLang");
+const targetLangEl=document.getElementById("targetLang");
 
-  const inputLangLabel  = document.getElementById("inputLangLabel");
-  const outputLangLabel = document.getElementById("outputLangLabel");
+const inputTextEl=document.getElementById("inputText");
+const outputTextEl=document.getElementById("outputText");
 
-  const micBtn        = document.getElementById("micBtn");
-  const micStatus     = document.getElementById("micStatus");
+const inputLangLabel=document.getElementById("inputLangLabel");
+const outputLangLabel=document.getElementById("outputLangLabel");
 
-  const translateBtn  = document.getElementById("translateBtn");
-  const clearBtn      = document.getElementById("clearBtn");
-  const copyBtn       = document.getElementById("copyBtn");
+const micBtn=document.getElementById("micBtn");
+const micStatus=document.getElementById("micStatus");
 
-  const speakInputBtn  = document.getElementById("speakInputBtn");
-  const speakOutputBtn = document.getElementById("speakOutputBtn");
+const translateBtn=document.getElementById("translateBtn");
 
-  const statusMsg = document.getElementById("statusMsg");
+const clearBtn=document.getElementById("clearBtn");
+const copyBtn=document.getElementById("copyBtn");
 
-  let isRecording = false;
-  let recognition = null;
+const swapBtn=document.getElementById("swapBtn");
 
-  function populateLanguages() {
-    UNIQUE_LANGUAGES.forEach((lang) => {
-      const opt1 = document.createElement("option");
-      opt1.value = lang.translateCode;
-      opt1.textContent = lang.name;
-      opt1.dataset.speechCode = lang.code;
-      sourceLangEl.appendChild(opt1);
+const speakInputBtn=document.getElementById("speakInputBtn");
+const speakOutputBtn=document.getElementById("speakOutputBtn");
 
-      const opt2 = document.createElement("option");
-      opt2.value = lang.translateCode;
-      opt2.textContent = lang.name;
-      opt2.dataset.speechCode = lang.code;
-      targetLangEl.appendChild(opt2);
-    });
+const statusMsg=document.getElementById("statusMsg");
 
-    setSelectByValue(sourceLangEl, "hi");
-    setSelectByValue(targetLangEl, "en");
+let recognition=null;
+let isRecording=false;
 
-    updateLangLabels();
-  }
 
-  function setSelectByValue(selectEl, value) {
-    const idx = Array.from(selectEl.options).findIndex((o) => o.value === value);
-    if (idx >= 0) selectEl.selectedIndex = idx;
-  }
+/* ===========================
+   Load Languages
+=========================== */
 
-  function getSpeechCode(selectEl) {
-    return selectEl.options[selectEl.selectedIndex].dataset.speechCode;
-  }
+function populateLanguages(){
 
-  function getLangName(selectEl) {
-    return selectEl.options[selectEl.selectedIndex].textContent;
-  }
+UNIQUE_LANGUAGES.forEach(lang=>{
 
-  function updateLangLabels() {
-    inputLangLabel.textContent = getLangName(sourceLangEl);
-    outputLangLabel.textContent = getLangName(targetLangEl);
-  }
+let option=document.createElement("option");
 
-  sourceLangEl.addEventListener("change", updateLangLabels);
-  targetLangEl.addEventListener("change", updateLangLabels);
+option.value=lang.translateCode;
 
-  swapBtn.addEventListener("click", () => {
-    const srcIdx = sourceLangEl.selectedIndex;
-    const tgtIdx = targetLangEl.selectedIndex;
-    sourceLangEl.selectedIndex = tgtIdx;
-    targetLangEl.selectedIndex = srcIdx;
-    updateLangLabels();
+option.textContent=lang.name;
 
-    const tmp = inputTextEl.value;
-    inputTextEl.value = outputTextEl.value;
-    outputTextEl.value = tmp;
-  });
+option.dataset.speech=lang.code;
 
-  function setStatus(msg, type) {
-    statusMsg.textContent = msg || "";
-    statusMsg.className = "status-msg" + (type ? " " + type : "");
-  }
+sourceLangEl.appendChild(option);
 
-  function getRecognitionClass() {
-    return window.SpeechRecognition || window.webkitSpeechRecognition || null;
-  }
+let option2=document.createElement("option");
 
-  function startRecording() {
-    const RecognitionClass = getRecognitionClass();
+option2.value=lang.translateCode;
 
-    if (!RecognitionClass) {
-      setStatus("Voice input is not supported in this browser. Please use Google Chrome.", "error");
-      return;
-    }
+option2.textContent=lang.name;
 
-    recognition = new RecognitionClass();
-    recognition.lang = getSpeechCode(sourceLangEl);
-    recognition.interimResults = true;
-    recognition.continuous = false;
-    recognition.maxAlternatives = 1;
+option2.dataset.speech=lang.code;
 
-    isRecording = true;
-    micBtn.classList.add("recording");
-    micStatus.textContent = "Listening... speak now";
-    setStatus("");
+targetLangEl.appendChild(option2);
 
-    let finalTranscript = "";
+});
 
-    recognition.onresult = (event) => {
-      let interim = "";
-      for (let i = event.resultIndex; i < event.results.length; i++) {
-        const transcript = event.results[i][0].transcript;
-        if (event.results[i].isFinal) {
-          finalTranscript += transcript;
-        } else {
-          interim += transcript;
-        }
-      }
-      inputTextEl.value = (finalTranscript + " " + interim).trim();
-    };
+sourceLangEl.value="hi";
 
-    recognition.onerror = (event) => {
-      isRecording = false;
-      micBtn.classList.remove("recording");
-      micStatus.textContent = "Tap to speak";
+targetLangEl.value="en";
 
-      let msg = "Voice input error: " + event.error;
-      if (event.error === "no-speech") msg = "No speech detected. Try again.";
-      if (event.error === "not-allowed" || event.error === "service-not-allowed") {
-        msg = "Microphone permission denied. Please allow mic access.";
-      }
-      setStatus(msg, "error");
-    };
+updateLabels();
 
-    recognition.onend = () => {
-      isRecording = false;
-      micBtn.classList.remove("recording");
-      micStatus.textContent = "Tap to speak";
+}
 
-      if (inputTextEl.value.trim().length > 0) {
-        translateText();
-      }
-    };
 
-    recognition.start();
-  }
+/* ===========================
+   Labels
+=========================== */
 
-  function stopRecording() {
-    if (recognition) {
-      recognition.stop();
-    }
-    isRecording = false;
-    micBtn.classList.remove("recording");
-    micStatus.textContent = "Tap to speak";
-  }
+function updateLabels(){
 
-  micBtn.addEventListener("click", () => {
-    if (isRecording) {
-      stopRecording();
-    } else {
-      startRecording();
-    }
-  });
+inputLangLabel.textContent=
 
-  async function translateText() {
-    const text = inputTextEl.value.trim();
-    if (!text) {
-      setStatus("Please speak or type something first.", "error");
-      return;
-    }
+sourceLangEl.options[sourceLangEl.selectedIndex].textContent;
 
-    const sourceLang = sourceLangEl.value;
-    const targetLang = targetLangEl.value;
+outputLangLabel.textContent=
 
-    if (sourceLang === targetLang) {
-      outputTextEl.value = text;
-      setStatus("Source and target languages are the same.", "");
-      return;
-    }
+targetLangEl.options[targetLangEl.selectedIndex].textContent;
 
-    translateBtn.disabled = true;
-    translateBtn.textContent = "Translating...";
-    setStatus("Translating, please wait...", "");
+}
 
-    try {
-      const langPair = `${sourceLang}|${targetLang}`;
-      const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${langPair}`;
+sourceLangEl.addEventListener("change",updateLabels);
 
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error("Network error: " + response.status);
-      }
+targetLangEl.addEventListener("change",updateLabels);
 
-      const data = await response.json();
 
-      if (data && data.responseData && data.responseData.translatedText) {
-        outputTextEl.value = data.responseData.translatedText;
-        setStatus("Translation complete.", "success");
+/* ===========================
+   Status
+=========================== */
 
-        speakText(outputTextEl.value, getSpeechCode(targetLangEl));
-      } else {
-        throw new Error("Translation failed. Try again.");
-      }
-    } catch (err) {
-      console.error(err);
-      setStatus("Translation failed. Check your internet connection and try again.", "error");
-    } finally {
-      translateBtn.disabled = false;
-      translateBtn.textContent = "Translate";
-    }
-  }
+function setStatus(message,type=""){
 
-  translateBtn.addEventListener("click", translateText);
+statusMsg.textContent=message;
 
-  inputTextEl.addEventListener("keydown", (e) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      translateText();
-    }
-  });
+statusMsg.className="status-msg";
 
-  function speakText(text, langCode) {
-    if (!text || !text.trim()) return;
+if(type){
 
-    if (!("speechSynthesis" in window)) {
-      setStatus("Voice output is not supported in this browser.", "error");
-      return;
-    }
+statusMsg.classList.add(type);
 
-    window.speechSynthesis.cancel();
+}
 
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = langCode;
-    utterance.rate = 0.95;
-    utterance.pitch = 1;
+}
 
-    const voices = window.speechSynthesis.getVoices();
-    const matchingVoice = voices.find((v) => v.lang === langCode) ||
-                           voices.find((v) => v.lang.startsWith(langCode.split("-")[0]));
-    if (matchingVoice) utterance.voice = matchingVoice;
 
-    window.speechSynthesis.speak(utterance);
-  }
+/* ===========================
+   Swap
+=========================== */
 
-  speakInputBtn.addEventListener("click", () => {
-    speakText(inputTextEl.value, getSpeechCode(sourceLangEl));
-  });
+swapBtn.addEventListener("click",()=>{
 
-  speakOutputBtn.addEventListener("click", () => {
-    speakText(outputTextEl.value, getSpeechCode(targetLangEl));
-  });
+let a=sourceLangEl.selectedIndex;
 
-  if ("speechSynthesis" in window) {
-    window.speechSynthesis.onvoiceschanged = () => {
-      window.speechSynthesis.getVoices();
-    };
-  }
+let b=targetLangEl.selectedIndex;
 
-  clearBtn.addEventListener("click", () => {
-    inputTextEl.value = "";
-    outputTextEl.value = "";
-    setStatus("");
-    inputTextEl.focus();
-  });
+sourceLangEl.selectedIndex=b;
 
-  copyBtn.addEventListener("click", () => {
-    const text = outputTextEl.value;
-    if (!text) {
-      setStatus("Nothing to copy yet.", "error");
-      return;
-    }
-    navigator.clipboard.writeText(text).then(() => {
-      setStatus("Copied to clipboard!", "success");
-    }).catch(() => {
-      outputTextEl.select();
-      document.execCommand("copy");
-      setStatus("Copied to clipboard!", "success");
-    });
-  });
+targetLangEl.selectedIndex=a;
 
-  if ("serviceWorker" in navigator) {
-    window.addEventListener("load", () => {
-      navigator.serviceWorker.register("sw.js").catch((err) => {
-        console.warn("Service worker registration failed:", err);
-      });
-    });
-  }
+updateLabels();
 
-  populateLanguages();
+let temp=inputTextEl.value;
+
+inputTextEl.value=outputTextEl.value;
+
+outputTextEl.value=temp;
+
+});
+
+
+/* ===========================
+   Voice Recognition
+=========================== */
+
+function startRecording(){
+
+const SpeechRecognition=
+
+window.SpeechRecognition||
+
+window.webkitSpeechRecognition;
+
+if(!SpeechRecognition){
+
+setStatus(
+
+"Speech Recognition not supported",
+
+"error"
+
+);
+
+return;
+
+}
+
+recognition=new SpeechRecognition();
+
+recognition.lang=
+
+sourceLangEl.options[
+
+sourceLangEl.selectedIndex
+
+].dataset.speech;
+
+recognition.interimResults=true;
+
+recognition.continuous=false;
+
+recognition.maxAlternatives=1;
+
+recognition.start();
+
+isRecording=true;
+
+micBtn.classList.add("recording");
+
+micStatus.textContent="Listening...";
+
+setStatus("Speak now...");/* ===========================
+   Speech Result
+=========================== */
+
+recognition.onresult = (event) => {
+
+let finalTranscript = "";
+
+let interimTranscript = "";
+
+for (
+let i = event.resultIndex;
+i < event.results.length;
+i++
+){
+
+const transcript =
+event.results[i][0].transcript;
+
+if(event.results[i].isFinal){
+
+finalTranscript += transcript;
+
+}else{
+
+interimTranscript += transcript;
+
+}
+
+}
+
+inputTextEl.value =
+(finalTranscript + interimTranscript).trim();
+
+};
+
+
+/* ===========================
+   Speech Error
+=========================== */
+
+recognition.onerror = (event)=>{
+
+isRecording=false;
+
+micBtn.classList.remove("recording");
+
+micStatus.textContent="Tap to Speak";
+
+setStatus(
+"Voice Error : " + event.error,
+"error"
+);
+
+};
+
+
+/* ===========================
+   Speech End
+=========================== */
+
+recognition.onend=()=>{
+
+isRecording=false;
+
+micBtn.classList.remove("recording");
+
+micStatus.textContent="Tap to Speak";
+
+if(inputTextEl.value.trim()){
+
+translateText();
+
+}
+
+};
+
+
+/* ===========================
+   Mic Button
+=========================== */
+
+micBtn.addEventListener("click",()=>{
+
+if(isRecording){
+
+recognition.stop();
+
+}else{
+
+startRecording();
+
+}
+
+});
+
+
+/* ===========================
+   Translation
+=========================== */
+
+async function translateText(){
+
+const text=inputTextEl.value.trim();
+
+if(!text){
+
+setStatus(
+"Please enter some text.",
+"error"
+);
+
+return;
+
+}
+
+translateBtn.disabled=true;
+
+translateBtn.innerHTML="Translating...";
+
+setStatus("Translating...");
+
+try{
+
+const source=sourceLangEl.value;
+
+const target=targetLangEl.value;
+
+const url=
+
+`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${source}|${target}`;
+
+const response=
+
+await fetch(url);
+
+const data=
+
+await response.json();
+
+outputTextEl.value=
+
+data.responseData.translatedText;
+
+setStatus(
+"Translation Completed",
+"success"
+);
+
+speakText(
+outputTextEl.value,
+targetLangEl.options[
+targetLangEl.selectedIndex
+].dataset.speech
+);
+
+}catch(e){
+
+setStatus(
+"Translation Failed",
+"error"
+);
+
+}
+
+translateBtn.disabled=false;
+
+translateBtn.innerHTML="Translate";
+
+}
+
+
+/* ===========================
+   Translate Button
+=========================== */
+
+translateBtn.addEventListener(
+
+"click",
+
+translateText
+
+);/* ===========================
+   Text To Speech
+=========================== */
+
+function speakText(text, lang) {
+
+if (!text) return;
+
+if (!("speechSynthesis" in window)) {
+
+setStatus("Speech output is not supported.","error");
+
+return;
+
+}
+
+window.speechSynthesis.cancel();
+
+const speech = new SpeechSynthesisUtterance(text);
+
+speech.lang = lang;
+
+speech.rate = 0.95;
+
+speech.pitch = 1;
+
+const voices = window.speechSynthesis.getVoices();
+
+const voice = voices.find(v => v.lang === lang) ||
+voices.find(v => v.lang.startsWith(lang.split("-")[0]));
+
+if (voice) {
+
+speech.voice = voice;
+
+}
+
+window.speechSynthesis.speak(speech);
+
+}
+
+
+/* ===========================
+   Listen Buttons
+=========================== */
+
+speakInputBtn.addEventListener("click", () => {
+
+speakText(
+
+inputTextEl.value,
+
+sourceLangEl.options[sourceLangEl.selectedIndex].dataset.speech
+
+);
+
+});
+
+speakOutputBtn.addEventListener("click", () => {
+
+speakText(
+
+outputTextEl.value,
+
+targetLangEl.options[targetLangEl.selectedIndex].dataset.speech
+
+);
+
+});
+
+
+/* ===========================
+   Copy Button
+=========================== */
+
+copyBtn.addEventListener("click", async () => {
+
+if (!outputTextEl.value) {
+
+setStatus("Nothing to copy.","error");
+
+return;
+
+}
+
+try {
+
+await navigator.clipboard.writeText(outputTextEl.value);
+
+setStatus("Copied Successfully","success");
+
+} catch {
+
+outputTextEl.select();
+
+document.execCommand("copy");
+
+setStatus("Copied Successfully","success");
+
+}
+
+});
+
+
+/* ===========================
+   Clear Button
+=========================== */
+
+clearBtn.addEventListener("click", () => {
+
+inputTextEl.value = "";
+
+outputTextEl.value = "";
+
+setStatus("");
+
+inputTextEl.focus();
+
+});
+
+
+/* ===========================
+   Service Worker
+=========================== */
+
+if ("serviceWorker" in navigator) {
+
+window.addEventListener("load", () => {
+
+navigator.serviceWorker
+
+.register("sw.js")
+
+.catch(err => console.log(err));
+
+});
+
+}
+
+
+/* ===========================
+   Initialize App
+=========================== */
+
+populateLanguages();
+
 })();
