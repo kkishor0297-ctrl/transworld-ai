@@ -1,777 +1,299 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-<<<<<<< HEAD
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Transworld AI - Voice Translator</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --blue-deep: #020b18;
-      --blue-dark: #041428;
-      --blue-mid: #0a2a4a;
-      --blue-accent: #0077ff;
-      --blue-glow: #00aaff;
-      --blue-bright: #33ccff;
-      --blue-shine: #99eeff;
-      --text-main: #e0f4ff;
-      --text-dim: #7ab8d4;
-      --border: rgba(0,170,255,0.25);
-      --glass: rgba(0,40,80,0.55);
-    }
 
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+<meta charset="UTF-8">
 
-    body {
-      background: var(--blue-deep);
-      color: var(--text-main);
-      font-family: 'Exo 2', sans-serif;
-      min-height: 100vh;
-      overflow-x: hidden;
-      background-image:
-        radial-gradient(ellipse at 20% 20%, rgba(0,100,255,0.08) 0%, transparent 60%),
-        radial-gradient(ellipse at 80% 80%, rgba(0,170,255,0.06) 0%, transparent 60%);
-    }
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
 
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image:
-        linear-gradient(rgba(0,119,255,0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0,119,255,0.04) 1px, transparent 1px);
-      background-size: 40px 40px;
-      pointer-events: none;
-      z-index: 0;
-    }
+<meta name="theme-color"
+content="#041428">
 
-    .container {
-      position: relative;
-      z-index: 1;
-      max-width: 700px;
-      margin: 0 auto;
-      padding: 16px 14px 40px;
-    }
+<title>
+Transworld AI
+</title>
 
-    /* HEADER */
-    .header {
-      text-align: center;
-      padding: 20px 0 18px;
-    }
+<link rel="icon"
+href="logo.png">
 
-    .logo-symbol {
-      font-size: 2rem;
-      font-weight: 900;
-      font-family: 'Orbitron', sans-serif;
-      background: linear-gradient(135deg, #fff 0%, var(--blue-bright) 50%, var(--blue-glow) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      letter-spacing: 2px;
-      display: block;
-      filter: drop-shadow(0 0 12px rgba(0,170,255,0.7));
-      animation: pulseGlow 3s ease-in-out infinite;
-    }
+<link rel="manifest"
+href="manifest.json">
 
-    .logo-name {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 1rem;
-      font-weight: 700;
-      letter-spacing: 4px;
-      color: var(--blue-bright);
-      text-transform: uppercase;
-      margin-top: 5px;
-      text-shadow: 0 0 20px rgba(0,200,255,0.5);
-    }
+<link rel="preconnect"
+href="https://fonts.googleapis.com">
 
-    .logo-tagline {
-      font-size: 0.72rem;
-      color: var(--text-dim);
-      letter-spacing: 2px;
-      margin-top: 4px;
-      text-transform: uppercase;
-    }
+<link rel="preconnect"
+href="https://fonts.gstatic.com"
+crossorigin>
 
-    @keyframes pulseGlow {
-      0%, 100% { filter: drop-shadow(0 0 10px rgba(0,170,255,0.6)); }
-      50% { filter: drop-shadow(0 0 22px rgba(0,200,255,0.95)); }
-    }
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600;700&display=swap"
+rel="stylesheet">
 
-    /* CARD */
-    .card {
-      background: var(--glass);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 18px 16px;
-      margin-bottom: 12px;
-      backdrop-filter: blur(12px);
-      box-shadow: 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05);
-    }
+<link rel="stylesheet"
+href="style.css">
 
-    .card-label {
-      font-size: 0.68rem;
-      letter-spacing: 2.5px;
-      text-transform: uppercase;
-      color: var(--blue-glow);
-      margin-bottom: 10px;
-      font-weight: 600;
-    }
-
-    /* OUTPUT LANGUAGE SELECTOR */
-    .lang-select-wrap {
-      position: relative;
-    }
-
-    .lang-select-wrap::after {
-      content: '';
-      position: absolute;
-      right: 14px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 0;
-      height: 0;
-      border-left: 5px solid transparent;
-      border-right: 5px solid transparent;
-      border-top: 6px solid var(--blue-glow);
-      pointer-events: none;
-    }
-
-    .lang-select {
-      width: 100%;
-      background: rgba(0,20,50,0.85);
-      border: 1.5px solid rgba(0,150,255,0.4);
-      border-radius: 12px;
-      color: var(--text-main);
-      font-family: 'Exo 2', sans-serif;
-      font-size: 1rem;
-      font-weight: 600;
-      padding: 13px 40px 13px 16px;
-      outline: none;
-      cursor: pointer;
-      transition: border-color 0.2s, box-shadow 0.2s;
-      appearance: none;
-      -webkit-appearance: none;
-    }
-
-    .lang-select:focus {
-      border-color: var(--blue-glow);
-      box-shadow: 0 0 0 3px rgba(0,170,255,0.18);
-    }
-
-    .lang-select option {
-      background: #041428;
-      color: var(--text-main);
-      font-size: 0.95rem;
-    }
-
-    .auto-detect-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(0,180,100,0.12);
-      border: 1px solid rgba(0,200,120,0.3);
-      border-radius: 20px;
-      padding: 5px 12px;
-      font-size: 0.72rem;
-      color: #55ddaa;
-      letter-spacing: 0.5px;
-      margin-bottom: 10px;
-    }
-
-    .auto-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: #00dd88;
-      animation: autoPulse 2s infinite;
-    }
-
-    @keyframes autoPulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.4; }
-    }
-
-    /* BIG INPUT AREA */
-    .text-area-wrap {
-      position: relative;
-    }
-
-    .text-input {
-      width: 100%;
-      min-height: 160px;
-      background: rgba(0,15,40,0.75);
-      border: 1.5px solid rgba(0,150,255,0.28);
-      border-radius: 12px;
-      color: var(--text-main);
-      font-family: 'Exo 2', sans-serif;
-      font-size: 1.05rem;
-      line-height: 1.7;
-      padding: 16px 16px 36px 16px;
-      outline: none;
-      resize: none;
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
-
-    .text-input:focus {
-      border-color: var(--blue-glow);
-      box-shadow: 0 0 0 3px rgba(0,170,255,0.12);
-    }
-
-    .text-input::placeholder {
-      color: rgba(120,180,210,0.4);
-      font-size: 0.95rem;
-    }
-
-    .char-count {
-      position: absolute;
-      bottom: 10px;
-      right: 14px;
-      font-size: 0.68rem;
-      color: var(--text-dim);
-      opacity: 0.55;
-    }
-
-    /* OUTPUT BOX */
-    .output-box {
-      width: 100%;
-      min-height: 130px;
-      max-height: 220px;
-      overflow-y: auto;
-      background: rgba(0,10,30,0.78);
-      border: 1.5px solid rgba(0,150,255,0.22);
-      border-radius: 12px;
-      padding: 16px;
-      font-size: 1.05rem;
-      line-height: 1.75;
-      color: var(--blue-shine);
-      word-break: break-word;
-    }
-
-    .output-box::-webkit-scrollbar { width: 5px; }
-    .output-box::-webkit-scrollbar-track { background: transparent; }
-    .output-box::-webkit-scrollbar-thumb {
-      background: rgba(0,170,255,0.35);
-      border-radius: 3px;
-    }
-
-    .output-placeholder {
-      color: rgba(100,160,200,0.38);
-      font-style: italic;
-      font-size: 0.9rem;
-    }
-
-    /* BUTTONS */
-    .btn-row {
-      display: flex;
-      gap: 10px;
-      margin-top: 14px;
-    }
-
-    .btn {
-      flex: 1;
-      height: 50px;
-      border-radius: 12px;
-      border: none;
-      font-family: 'Exo 2', sans-serif;
-      font-size: 0.92rem;
-      font-weight: 600;
-      letter-spacing: 0.8px;
-      cursor: pointer;
-      transition: all 0.2s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 7px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .btn::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(rgba(255,255,255,0.07), transparent);
-      pointer-events: none;
-    }
-
-    .btn-mic {
-      background: linear-gradient(135deg, #0044aa, #0066cc);
-      color: #fff;
-      border: 1px solid rgba(0,150,255,0.5);
-      box-shadow: 0 4px 15px rgba(0,80,200,0.35);
-    }
-
-    .btn-mic:hover {
-      background: linear-gradient(135deg, #0055cc, #0088ee);
-      transform: translateY(-1px);
-    }
-
-    .btn-mic.active {
-      background: linear-gradient(135deg, #cc0022, #ee1133);
-      border-color: rgba(255,80,100,0.5);
-      box-shadow: 0 4px 20px rgba(200,0,30,0.5);
-      animation: micPulse 1.5s ease-in-out infinite;
-    }
-
-    @keyframes micPulse {
-      0%, 100% { box-shadow: 0 4px 20px rgba(200,0,30,0.4); }
-      50% { box-shadow: 0 4px 30px rgba(255,50,70,0.8); }
-    }
-
-    .btn-translate {
-      background: linear-gradient(135deg, #0077ff, #00aaff);
-      color: #fff;
-      border: 1px solid rgba(0,200,255,0.4);
-      box-shadow: 0 4px 15px rgba(0,150,255,0.4);
-    }
-
-    .btn-translate:hover {
-      background: linear-gradient(135deg, #0088ff, #00ccff);
-      box-shadow: 0 4px 25px rgba(0,180,255,0.6);
-      transform: translateY(-1px);
-    }
-
-    .btn-clear {
-      flex: 0 0 50px;
-      background: rgba(0,20,50,0.7);
-      color: var(--text-dim);
-      border: 1px solid rgba(0,120,200,0.25);
-      font-size: 1.1rem;
-    }
-
-    .btn-clear:hover {
-      background: rgba(180,0,0,0.2);
-      border-color: rgba(255,80,80,0.4);
-      color: #ff8888;
-    }
-
-    .copy-btn {
-      margin-top: 10px;
-      background: transparent;
-      border: 1px solid rgba(0,170,255,0.3);
-      color: var(--blue-glow);
-      border-radius: 8px;
-      padding: 7px 16px;
-      font-family: 'Exo 2', sans-serif;
-      font-size: 0.78rem;
-      letter-spacing: 1px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .copy-btn:hover {
-      background: rgba(0,150,255,0.15);
-      border-color: var(--blue-glow);
-    }
-
-    /* STATUS */
-    .status-bar {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 9px 13px;
-      background: rgba(0,15,40,0.6);
-      border: 1px solid rgba(0,120,200,0.2);
-      border-radius: 10px;
-      margin-top: 10px;
-    }
-
-    .status-dot {
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      background: var(--text-dim);
-      transition: background 0.3s;
-      flex-shrink: 0;
-    }
-
-    .status-dot.listening { background: #ff3355; animation: blink 1s infinite; }
-    .status-dot.translating { background: #ffaa00; animation: blink 0.5s infinite; }
-    .status-dot.done { background: #00cc66; }
-    .status-dot.error { background: #ff4444; }
-
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.3; }
-    }
-
-    .status-text {
-      font-size: 0.78rem;
-      color: var(--text-dim);
-    }
-
-    /* DEMO BADGE */
-    .demo-badge {
-      text-align: center;
-      margin-top: 16px;
-      padding: 9px;
-      background: rgba(255,150,0,0.07);
-      border: 1px solid rgba(255,150,0,0.2);
-      border-radius: 10px;
-      font-size: 0.7rem;
-      color: rgba(255,180,80,0.75);
-      letter-spacing: 0.5px;
-    }
-
-    /* LOADING */
-    .loading {
-      display: inline-flex;
-      gap: 4px;
-      align-items: center;
-    }
-
-    .loading span {
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      background: var(--blue-glow);
-      animation: bounce 1.2s infinite;
-    }
-
-    .loading span:nth-child(2) { animation-delay: 0.2s; }
-    .loading span:nth-child(3) { animation-delay: 0.4s; }
-
-    @keyframes bounce {
-      0%, 100% { transform: translateY(0); opacity: 0.5; }
-      50% { transform: translateY(-5px); opacity: 1; }
-    }
-
-    @media (max-width: 480px) {
-      .logo-symbol { font-size: 1.7rem; }
-      .logo-name { font-size: 0.85rem; }
-      .btn { height: 46px; font-size: 0.82rem; }
-      .text-input { min-height: 140px; font-size: 1rem; }
-    }
-  </style>
 </head>
+
 <body>
+
+<div class="background-grid"></div>
 
 <div class="container">
 
-  <!-- HEADER -->
-  <div class="header">
-    <span class="logo-symbol">Aअ</span>
-    <div class="logo-name">Transworld AI</div>
-    <div class="logo-tagline">Voice · Text · Translation</div>
-  </div>
+<header>
 
-  <!-- INPUT SECTION -->
-  <div class="card">
-    <div class="card-label">✏️ Speak or Type (Any Language)</div>
+<img
+src="logo.png"
+class="logo"
+alt="Transworld AI">
 
-    <div class="auto-detect-badge">
-      <span class="auto-dot"></span>
-      Auto Detect Language
-    </div>
+<h1>
 
-    <div class="text-area-wrap">
-      <textarea
-        class="text-input"
-        id="inputText"
-        placeholder="Type here in any language...&#10;या यहाँ हिंदी में लिखें...&#10;Oder tippen Sie auf Deutsch..."
-        maxlength="1000"
-        oninput="updateChar()"
-      ></textarea>
-      <span class="char-count" id="charCount">0 / 1000</span>
-    </div>
+Transworld AI
 
-    <div class="status-bar">
-      <div class="status-dot" id="statusDot"></div>
-      <span class="status-text" id="statusText">Ready — speak or type in any language</span>
-    </div>
+</h1>
 
-    <div class="btn-row">
-      <button class="btn btn-mic" id="micBtn" onclick="toggleMic()">
-        🎤 <span id="micLabel">Mic ON</span>
-      </button>
-      <button class="btn btn-clear" onclick="clearAll()" title="Clear">🗑</button>
-    </div>
-  </div>
+<p>
 
-  <!-- OUTPUT LANGUAGE + TRANSLATE -->
-  <div class="card">
-    <div class="card-label">🌐 Select Output Language</div>
-    <div class="lang-select-wrap">
-      <select class="lang-select" id="targetLang">
-        <option value="en">🌍 English</option>
-        <option value="hi" selected>🇮🇳 Hindi — हिंदी</option>
-        <option value="zh">🇨🇳 Mandarin Chinese — 中文</option>
-        <option value="es">🇪🇸 Spanish — Español</option>
-        <option value="fr">🇫🇷 French — Français</option>
-        <option value="ar">🇸🇦 Arabic — العربية</option>
-        <option value="bn">🇧🇩 Bengali — বাংলা</option>
-        <option value="pt">🇧🇷 Portuguese — Português</option>
-        <option value="ru">🇷🇺 Russian — Русский</option>
-        <option value="ur">🇵🇰 Urdu — اردو</option>
-        <option value="id">🇮🇩 Indonesian — Bahasa</option>
-        <option value="sw">🌍 Swahili</option>
-        <option value="de">🇩🇪 German — Deutsch</option>
-        <option value="pa">🇮🇳 Punjabi — ਪੰਜਾਬੀ</option>
-        <option value="ja">🇯🇵 Japanese — 日本語</option>
-        <option value="mr">🇮🇳 Marathi — मराठी</option>
-        <option value="vi">🇻🇳 Vietnamese — Tiếng Việt</option>
-        <option value="te">🇮🇳 Telugu — తెలుగు</option>
-        <option value="tr">🇹🇷 Turkish — Türkçe</option>
-        <option value="fa">🇮🇷 Persian — فارسی</option>
-      </select>
-    </div>
+Universal Voice Translator
 
-    <div class="btn-row" style="margin-top:14px;">
-      <button class="btn btn-translate" onclick="translateText()">
-        ⚡ Translate Now
-      </button>
-    </div>
-  </div>
+</p>
 
-  <!-- OUTPUT -->
-  <div class="card">
-    <div class="card-label">📄 Translation Output</div>
-    <div class="output-box" id="outputBox">
-      <span class="output-placeholder">Translation will appear here — scroll to read more...</span>
-    </div>
-    <button class="copy-btn" onclick="copyOutput()">⎘ Copy Translation</button>
-  </div>
+</header><!-- =========================
+         LANGUAGE SELECTION
+    ========================== -->
 
-  <div class="demo-badge">
-    ⚠️ DEMO MODE — Add Google Translate API key for real translation
-  </div>
+    <section class="language-section">
 
-</div>
+      <div class="language-card">
 
-<script>
-  const demoMap = {
-    "hello": { hi: "नमस्ते", de: "Hallo", fr: "Bonjour", es: "Hola", ar: "مرحبا", ja: "こんにちは", ru: "Привет", zh: "你好", pt: "Olá", tr: "Merhaba", ur: "ہیلو", bn: "হ্যালো" },
-    "how are you": { hi: "आप कैसे हैं?", de: "Wie geht es Ihnen?", fr: "Comment allez-vous?", es: "¿Cómo está?", ja: "お元気ですか？", ru: "Как дела?", zh: "你好吗？", ar: "كيف حالك؟", ur: "آپ کیسے ہیں؟" },
-    "thank you": { hi: "धन्यवाद", de: "Danke", fr: "Merci", es: "Gracias", ar: "شكراً", ja: "ありがとう", ru: "Спасибо", zh: "谢谢", pt: "Obrigado", tr: "Teşekkürler", ur: "شکریہ", bn: "ধন্যবাদ" },
-    "good morning": { hi: "सुप्रभात", de: "Guten Morgen", fr: "Bonjour", es: "Buenos días", ja: "おはようございます", ru: "Доброе утро", zh: "早上好", ar: "صباح الخير", ur: "صبح بخیر" },
-    "my name is": { hi: "मेरा नाम है", de: "Mein Name ist", fr: "Je m'appelle", es: "Me llamo", ja: "私の名前は", ru: "Меня зовут", zh: "我的名字是", ar: "اسمي", ur: "میرا نام ہے" },
-    "i love you": { hi: "मैं तुमसे प्यार करता हूं", de: "Ich liebe dich", fr: "Je t'aime", es: "Te amo", ja: "愛してる", ru: "Я тебя люблю", zh: "我爱你", ar: "أحبك", ur: "میں تم سے محبت کرتا ہوں" },
-    "water": { hi: "पानी", de: "Wasser", fr: "Eau", es: "Agua", ar: "ماء", ja: "水", ru: "Вода", zh: "水", pt: "Água", tr: "Su" },
-    "food": { hi: "खाना", de: "Essen", fr: "Nourriture", es: "Comida", ar: "طعام", ja: "食べ物", ru: "Еда", zh: "食物" },
-  };
+        <label class="label">
+          🎙 Speak Language
+        </label>
 
-  let micActive = false;
-  let recognition = null;
+        <select id="sourceLang" class="language-select">
+        </select>
 
-  function toggleMic() {
-    const btn = document.getElementById('micBtn');
-    const label = document.getElementById('micLabel');
-
-    if (!micActive) {
-      if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-        setStatus('Browser does not support mic. Please use Chrome.', 'error');
-        return;
-      }
-      micActive = true;
-      btn.classList.add('active');
-      label.textContent = 'Mic OFF';
-      startListening();
-    } else {
-      micActive = false;
-      btn.classList.remove('active');
-      label.textContent = 'Mic ON';
-      if (recognition) recognition.stop();
-      setStatus('Mic stopped', '');
-    }
-  }
-
-  function startListening() {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    recognition = new SpeechRecognition();
-    recognition.continuous = true;
-    recognition.interimResults = true;
-    recognition.lang = ''; // auto detect
-
-    setStatus('🎤 Listening — speak in any language...', 'listening');
-
-    recognition.onresult = (e) => {
-      let transcript = '';
-      for (let i = 0; i < e.results.length; i++) {
-        transcript += e.results[i][0].transcript;
-      }
-      document.getElementById('inputText').value = transcript;
-      updateChar();
-    };
-
-    recognition.onerror = (e) => {
-      setStatus('Mic error: ' + e.error, 'error');
-      micActive = false;
-      document.getElementById('micBtn').classList.remove('active');
-      document.getElementById('micLabel').textContent = 'Mic ON';
-    };
-
-    recognition.onend = () => {
-      if (micActive) recognition.start();
-    };
-
-    recognition.start();
-  }
-
-  async function translateText() {
-    const text = document.getElementById('inputText').value.trim();
-    const targetLang = document.getElementById('targetLang').value;
-    const outputBox = document.getElementById('outputBox');
-
-    if (!text) {
-      setStatus('Please enter or speak text first.', 'error');
-      return;
-    }
-
-    setStatus('Translating...', 'translating');
-    outputBox.innerHTML = '<div class="loading"><span></span><span></span><span></span></div>';
-
-    await new Promise(r => setTimeout(r, 900));
-
-    const lower = text.toLowerCase().trim();
-    let result = null;
-
-    for (const key in demoMap) {
-      if (lower.includes(key) && demoMap[key][targetLang]) {
-        result = demoMap[key][targetLang];
-        break;
-      }
-    }
-
-    if (!result) {
-      result = `[DEMO MODE]\n\nInput: "${text}"\nOutput Language: ${getLangName(targetLang)}\n\nReal translation needs Google Translate API key.\nAdd API key in app.js to enable full translation.`;
-    }
-
-    outputBox.innerHTML = '';
-    const p = document.createElement('p');
-    p.style.whiteSpace = 'pre-wrap';
-    p.style.fontSize = '1.05rem';
-    p.style.lineHeight = '1.75';
-    p.textContent = result;
-    outputBox.appendChild(p);
-
-    setStatus('Translation complete ✓', 'done');
-  }
-
-  function getLangName(code) {
-    const names = {
-      hi:'Hindi', en:'English', zh:'Chinese', es:'Spanish', fr:'French',
-      ar:'Arabic', bn:'Bengali', pt:'Portuguese', ru:'Russian', ur:'Urdu',
-      id:'Indonesian', sw:'Swahili', de:'German', pa:'Punjabi', ja:'Japanese',
-      mr:'Marathi', vi:'Vietnamese', te:'Telugu', tr:'Turkish', fa:'Persian'
-    };
-    return names[code] || code;
-  }
-
-  function updateChar() {
-    const len = document.getElementById('inputText').value.length;
-    document.getElementById('charCount').textContent = `${len} / 1000`;
-  }
-
-  function clearAll() {
-    document.getElementById('inputText').value = '';
-    document.getElementById('outputBox').innerHTML = '<span class="output-placeholder">Translation will appear here — scroll to read more...</span>';
-    updateChar();
-    setStatus('Ready — speak or type in any language', '');
-    if (micActive) toggleMic();
-  }
-
-  function copyOutput() {
-    const text = document.getElementById('outputBox').innerText;
-    if (!text || text.includes('Translation will appear')) return;
-    navigator.clipboard.writeText(text).then(() => {
-      setStatus('Copied to clipboard ✓', 'done');
-    });
-  }
-
-  function setStatus(msg, type) {
-    document.getElementById('statusText').textContent = msg;
-    const dot = document.getElementById('statusDot');
-    dot.className = 'status-dot';
-    if (type) dot.classList.add(type);
-  }
-</script>
-=======
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-  <meta name="theme-color" content="#4F46E5" />
-  <meta name="description" content="Transworld AI - Voice & Text Translator for Travelers and Interview Speakers" />
-
-  <title>Transworld AI - Voice Translator</title>
-
-  <link rel="manifest" href="manifest.json" />
-  <link rel="icon" type="image/png" href="logo.png" />
-  <link rel="apple-touch-icon" href="logo.png" />
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body>
-
-  <div class="app">
-
-    <header class="header">
-      <img src="logo.png" alt="Transworld AI Logo" class="logo" />
-      <div class="header-text">
-        <h1>Transworld AI</h1>
-        <p>Voice &amp; Text Translator</p>
       </div>
-    </header>
 
-    <main class="main">
+      <div class="swap-button-area">
 
-      <div class="lang-row">
-        <div class="lang-box">
-          <label for="sourceLang">Speak in</label>
-          <select id="sourceLang"></select>
-        </div>
-
-        <button id="swapBtn" class="swap-btn" title="Swap languages" aria-label="Swap languages">
+        <button id="swapBtn" class="swap-btn">
           ⇄
         </button>
 
-        <div class="lang-box">
-          <label for="targetLang">Translate to</label>
-          <select id="targetLang"></select>
-        </div>
       </div>
 
-      <div class="text-card">
-        <div class="text-card-header">
-          <span>Original</span>
-          <button id="clearBtn" class="icon-btn" title="Clear">✕</button>
-        </div>
-        <textarea id="inputText" placeholder="Tap the mic and speak, or type here..." rows="4"></textarea>
-        <div class="text-card-footer">
-          <button id="speakInputBtn" class="icon-btn" title="Listen to original">🔊</button>
-          <span id="inputLangLabel" class="lang-label"></span>
-        </div>
+      <div class="language-card">
+
+        <label class="label">
+          🌍 Translate To
+        </label>
+
+        <select id="targetLang" class="language-select">
+        </select>
+
       </div>
 
-      <div class="mic-wrapper">
-        <button id="micBtn" class="mic-btn" title="Tap to speak" aria-label="Record voice">
-          <svg id="micIcon" viewBox="0 0 24 24" width="36" height="36" fill="currentColor">
-            <path d="M12 14a3 3 0 0 0 3-3V5a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3z"/>
-            <path d="M19 11a1 1 0 0 0-2 0 5 5 0 0 1-10 0 1 1 0 0 0-2 0 7 7 0 0 0 6 6.92V20H9a1 1 0 0 0 0 2h6a1 1 0 0 0 0-2h-2v-2.08A7 7 0 0 0 19 11z"/>
-          </svg>
+    </section>
+
+
+    <!-- =========================
+         INPUT BOX
+    ========================== -->
+
+    <section class="translator-card">
+
+      <div class="card-header">
+
+        <h3>
+          🎤 Speak or Type
+        </h3>
+
+        <span id="inputLangLabel">
+          Hindi
+        </span>
+
+      </div>
+
+      <textarea
+
+        id="inputText"
+
+        placeholder="Tap the microphone and start speaking..."
+
+        rows="6">
+
+      </textarea>
+
+      <div class="card-footer">
+
+        <button
+
+          id="clearBtn"
+
+          class="small-btn">
+
+          🗑 Clear
+
         </button>
-        <p id="micStatus" class="mic-status">Tap to speak</p>
+
+        <button
+
+          id="speakInputBtn"
+
+          class="small-btn">
+
+          🔊 Listen
+
+        </button>
+
       </div>
 
-      <button id="translateBtn" class="translate-btn">Translate</button>
+    </section>
 
-      <div class="text-card output-card">
-        <div class="text-card-header">
-          <span>Translation</span>
-          <button id="copyBtn" class="icon-btn" title="Copy">⧉</button>
-        </div>
-        <textarea id="outputText" placeholder="Translation will appear here..." rows="4" readonly></textarea>
-        <div class="text-card-footer">
-          <button id="speakOutputBtn" class="icon-btn" title="Listen to translation">🔊</button>
-          <span id="outputLangLabel" class="lang-label"></span>
-        </div>
+
+    <!-- =========================
+         MICROPHONE
+    ========================== -->
+
+    <div class="mic-section">
+
+      <button
+
+        id="micBtn"
+
+        class="mic-btn">
+
+        🎤
+
+      </button>
+
+      <p id="micStatus">
+
+        Tap to Speak
+
+      </p>
+
+    </div>
+
+
+    <!-- =========================
+         TRANSLATE BUTTON
+    ========================== -->
+
+    <button
+
+      id="translateBtn"
+
+      class="translate-btn">
+
+      🌐 Translate
+
+    </button><!-- =========================
+         TRANSLATION OUTPUT
+    ========================== -->
+
+    <section class="translator-card output-card">
+
+      <div class="card-header">
+
+        <h3>
+          🌍 Translation
+        </h3>
+
+        <span id="outputLangLabel">
+          English
+        </span>
+
       </div>
 
-      <p id="statusMsg" class="status-msg"></p>
+      <textarea
+        id="outputText"
+        rows="6"
+        placeholder="Translation will appear here..."
+        readonly>
+      </textarea>
 
-    </main>
+      <div class="card-footer">
 
-    <footer class="footer">
-      <p>Made with ❤️ on mobile &amp; laptop &mdash; Transworld AI</p>
-    </footer>
+        <button
+          id="copyBtn"
+          class="small-btn">
 
-  </div>
+          📋 Copy
 
-  <script src="languages.js"></script>
-  <script src="app.js"></script>
+        </button>
+
+        <button
+          id="speakOutputBtn"
+          class="small-btn">
+
+          🔊 Listen
+
+        </button>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         STATUS MESSAGE
+    ========================== -->
+
+    <div
+      id="statusMsg"
+      class="status-msg">
+
+      Ready...
+
+    </div>
+
+
+  </main>
+
+
+  <!-- =========================
+       FOOTER
+  ========================== -->
+
+  <footer class="footer">
+
+      <img
+        src="logo.png"
+        class="footer-logo"
+        alt="Logo">
+
+      <h3>
+        Transworld AI
+      </h3>
+
+      <p>
+
+        World's Smart AI Translator
+
+      </p>
+
+      <small>
+
+        © 2026 Transworld AI
+
+      </small>
+
+  </footer>
+
+
+</div>
+
+
+<!-- JavaScript Files -->
+
+<script src="languages.js"></script>
+
+<script src="app.js"></script>
+
+</body>
+</html>
